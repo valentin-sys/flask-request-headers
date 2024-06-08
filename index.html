@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Headers</title>
+</head>
+<body>
+    <h1>Request Headers</h1>
+    <pre id="headers"></pre>
+    <script>
+        fetch(window.location.href, { method: 'GET' })
+            .then(response => response.text())
+            .then(data => {
+                const headers = [...response.headers.entries()]
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join('\n');
+                document.getElementById('headers').innerText = headers;
+            })
+            .catch(error => {
+                document.getElementById('headers').innerText = 'Error fetching headers';
+                console.error('Error:', error);
+            });
+    </script>
+</body>
+</html>
