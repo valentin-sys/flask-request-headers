@@ -3,22 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request Headers</title>
+    <title>Request and Response Headers</title>
+    <style>
+        pre {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
-    <h1>Request Headers</h1>
-    <pre id="headers"></pre>
+    <h1>Request and Response Headers</h1>
+    <h2>Request Headers</h2>
+    <pre id="request-headers"></pre>
+    <h2>Response Headers</h2>
+    <pre id="response-headers"></pre>
     <script>
-        fetch(window.location.href, { method: 'GET' })
-            .then(response => response.text())
-            .then(data => {
-                const headers = [...response.headers.entries()]
+        // Function to display headers in the specified element
+        function displayHeaders(elementId, headers) {
+            document.getElementById(elementId).innerText = headers;
+        }
+
+        // Fetching request headers using a simple GET request to an endpoint
+        fetch(window.location.href, { method: 'HEAD' })
+            .then(response => {
+                // Displaying request headers
+                const requestHeaders = [...response.headers.entries()]
                     .map(([key, value]) => `${key}: ${value}`)
                     .join('\n');
-                document.getElementById('headers').innerText = headers;
+                displayHeaders('request-headers', requestHeaders);
             })
             .catch(error => {
-                document.getElementById('headers').innerText = 'Error fetching headers';
+                displayHeaders('request-headers', 'Error fetching request headers');
+                console.error('Error:', error);
+            });
+
+        // Fetching response headers from a known endpoint
+        fetch('https://jsonplaceholder.typicode.com/posts/1', { method: 'GET' })
+            .then(response => {
+                // Displaying response headers
+                const responseHeaders = [...response.headers.entries()]
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join('\n');
+                displayHeaders('response-headers', responseHeaders);
+            })
+            .catch(error => {
+                displayHeaders('response-headers', 'Error fetching response headers');
                 console.error('Error:', error);
             });
     </script>
